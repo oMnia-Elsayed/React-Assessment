@@ -1,7 +1,7 @@
 
 import "./search.css";
 
-function SearchPage(props: any) {
+const SearchPage = (props: any) => {
     
   return (
     <div className="search-books">
