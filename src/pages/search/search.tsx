@@ -1,7 +1,7 @@
 
 import "./search.css";
 
-const SearchPage = (props: any) => {
+const SearchPage = ({showSearchPage, setShowSearchpage}: any) => {
     
   return (
     <div className="search-books">
@@ -9,7 +9,7 @@ const SearchPage = (props: any) => {
       <a
         className="close-search"
         href='/#'
-        onClick={() => props.setShowSearchpage(!props.showSearchPage)}
+        onClick={() => setShowSearchpage(!showSearchPage)}
       >
         Close
       </a>

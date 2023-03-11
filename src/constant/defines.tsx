@@ -12,3 +12,26 @@ export const shelfTitles = {
     read: 'Read',
 }
 
+export const dropdownStatus = [
+    {
+        key: 'Move to...',
+        value: 'none'
+    },
+    {
+        key: 'Currently Reading ',
+        value: 'currentlyReading'
+    },
+    {
+        key: 'Want to Read',
+        value: 'wantToRead'
+    },
+    {
+        key: 'Read',
+        value: 'read'
+    },
+    {
+        key: 'None',
+        value: 'none'
+    },
+];
+
