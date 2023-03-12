@@ -9,7 +9,7 @@ const App = () => {
 
   useEffect(() => {
     getAll().then((items) => setShelves(items));
-  }, []);
+  });
   
   return (
     <Home shelves={shelves} />
