@@ -1,17 +1,19 @@
 
-
+/** readingStatus  */
 export const readingStatus = {
     currentlyReading: 'currentlyReading',
     wantToRead: 'wantToRead',
     read: 'read',
 };
 
+/** shelfTitles */
 export const shelfTitles = {
     currentlyReading: 'Currently Reading',
     wantToRead: 'Want to Read',
     read: 'Read',
 }
 
+/** dropdownStatus */
 export const dropdownStatus = [
     {
         key: 'Move to...',
