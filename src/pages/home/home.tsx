@@ -1,14 +1,22 @@
 import "./home.css";
-import SearchPage from "../../pages/search/search";
 import Shelf from "../../components/shelf/shelf";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BookModel } from "../../models/book";
 import { readingStatus, shelfTitles } from "../../constant/defines";
 import { ShelfModel } from "../../models/shelf";
+import { getAll } from "../../BooksAPI";
+import { Link } from "react-router-dom";
 
-const Home = ({shelves}: any) => {
+const Home = () => {
+  
+  let mappedData = [];
 
-  const [showSearchPage, setShowSearchpage] = useState(false);
+  const [shelves, setShelves] = useState<any>([]);
+
+  useEffect(() => {
+    getAll().then((items) => setShelves(items));
+  }, []);
+
 
   /**
    * mapShelfData
@@ -17,7 +25,7 @@ const Home = ({shelves}: any) => {
    * @param readedBooks 
    * @returns ShelfModel[]
    */
-  const mapShelfData = (readingBooks: BookModel[], wantedBooks: BookModel[], readedBooks: BookModel[]): ShelfModel[] => {
+  const mapShelfData = (readingBooks: BookModel[], wantedBooks: BookModel[], readedBooks: BookModel[]): any => {
     return [
       {
         title: shelfTitles.currentlyReading,
@@ -33,49 +41,39 @@ const Home = ({shelves}: any) => {
       }
     ];
   };
-  
+
   // filter books based on currentlyReading | wantToRead | read
   if (Array.isArray(shelves)) {
-    const readingBooks: BookModel[] = shelves.filter(
+    const readingBooks = shelves.filter(
       el => el.shelf === readingStatus.currentlyReading
     );
-    const wantedBooks: BookModel[] = shelves.filter(
+    const wantedBooks = shelves.filter(
       el => el.shelf === readingStatus.wantToRead
     );
-    const readedBooks: BookModel[] = shelves.filter(
+    const readedBooks = shelves.filter(
       el => el.shelf === readingStatus.read
     );
 
-    shelves = mapShelfData(readingBooks, wantedBooks, readedBooks);
-  };
+    mappedData = mapShelfData(readingBooks, wantedBooks, readedBooks);
 
+  };
+  
   return (
-    <div className="app">
-      {showSearchPage ? (
-        <SearchPage
-          showSearchPage={showSearchPage}
-          setShowSearchpage={setShowSearchpage}
-        />
-      ) : (
-        <div className="list-books">
-          <div className="list-books-title">
-            <h1>MyReads</h1>
-          </div>
-          <div className="list-books-content">
-            <div>
-              {Array.isArray(shelves) &&
-                shelves.map((shelf: ShelfModel) => (
-                  <Shelf key={shelf.title} shelf={shelf} />
-                ))}
-            </div>
-          </div>
-          <div className="open-search">
-            <a href="/#" onClick={() => setShowSearchpage(!showSearchPage)}>
-              Add a book
-            </a>
-          </div>
+    <div className="list-books">
+      <div className="list-books-title">
+        <h1>MyReads</h1>
+      </div>
+      <div className="list-books-content">
+        <div>
+          {Array.isArray(mappedData) &&
+            mappedData.map((shelf: ShelfModel) => (
+              <Shelf key={shelf.title} shelf={shelf} />
+            ))}
         </div>
-      )}
+      </div>
+      <div className="open-search">
+        <Link to="/search"> Add a book</Link>
+      </div>
     </div>
   );
 };

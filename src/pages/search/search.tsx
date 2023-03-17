@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { search } from "../../BooksAPI";
 import { BookModel } from "../../models/book";
 import BookCard from "../../components/book/bookCard";
+import { Link } from "react-router-dom";
 
-const SearchPage = ({showSearchPage, setShowSearchpage}: any) => {
+const SearchPage = () => {
 
   const [searchText, setSearchText] = useState('');
   const [searchBooks, setSearchBooks] = useState([]);
@@ -21,7 +22,7 @@ const SearchPage = ({showSearchPage, setShowSearchpage}: any) => {
         console.log(res);
       });
 
-    } else  setSearchBooks([]);
+    } else setSearchBooks([]);
 
     // return(() =>  setSearchBooks([]));
   },[searchText]);
@@ -29,12 +30,7 @@ const SearchPage = ({showSearchPage, setShowSearchpage}: any) => {
   return (
     <div className="search-books">
       <div className="search-books-bar">
-        <button
-          className="close-search"
-          onClick={() => setShowSearchpage(!showSearchPage)}
-        >
-          Close
-        </button>
+        <Link to="/" className="close-search"> Add a book</Link>
         <div className="search-books-input-wrapper">
           <input
             type="text"

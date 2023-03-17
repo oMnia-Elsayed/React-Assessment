@@ -1,19 +1,20 @@
 import './App.css';
-import Home from "./pages/home/home";
-import { useState, useEffect } from 'react';
-import { getAll } from './BooksAPI';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import routes from "./routing";
+import { Provider } from 'react-redux'
+import store from './store/store';
 
 const App = () => {
-  
-  const [shelves, setShelves] = useState([]);
 
-  useEffect(() => {
-    getAll().then((items) => setShelves(items));
-  });
-  
+  const router = createBrowserRouter(routes);
+
   return (
-    <Home shelves={shelves} />
+    <div className="app">
+      <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+    </div>
   );
-}
+};
 
 export default App;

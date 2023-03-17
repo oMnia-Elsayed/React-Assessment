@@ -56,8 +56,8 @@ const BookCard = ({book}: any) => {
           </select>
         </div>
       </div>
-      <div className="book-title">{book.title}</div>
-      <div className="book-authors">{book.authors ? book.authors[0] : book.publisher}</div>
+      <div className="book-title">{book.title || 'Unknown'}</div>
+      <div className="book-authors">{book.authors ? book.authors[0] : book.publisher || 'Unknown'}</div>
     </div>
 
   );
