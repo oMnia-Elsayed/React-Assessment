@@ -1,50 +1,46 @@
 
 import "./search.css";
-import { useEffect, useState } from "react";
-import { search } from "../../BooksAPI";
+import { searchBooks } from "../../BooksAPI";
 import { BookModel } from "../../models/book";
 import BookCard from "../../components/book/bookCard";
 import { Link } from "react-router-dom";
+import { AppDispatch, RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchBooks } from "../../store/book-slice";
 
 const SearchPage = () => {
 
-  const [searchText, setSearchText] = useState('');
-  const [searchBooks, setSearchBooks] = useState([]);
-    
-  useEffect(() => {
+  const booksState = useSelector((state: RootState) => state.books);
 
-    if (searchText) {
+  const books = booksState.books;
 
-      search(searchText).then((res: any) => {
+  const useAppDispatch: () => AppDispatch = useDispatch;
 
-        res.error ? setSearchBooks([]) : setSearchBooks(res);
- 
-        console.log(res);
-      });
+  const dispatch = useAppDispatch();
 
-    } else setSearchBooks([]);
+  const getSearchResult = (searchText: string) => {
 
-    // return(() =>  setSearchBooks([]));
-  },[searchText]);
-  
+    dispatch(setSearchBooks(searchText));
+
+    dispatch(searchBooks(searchText));
+
+  };
+
   return (
     <div className="search-books">
       <div className="search-books-bar">
         <Link to="/" className="close-search"> Add a book</Link>
         <div className="search-books-input-wrapper">
           <input
-            type="text"
             placeholder="Search by title, author, or ISBN"
-            value={searchText}
-            onChange={e => setSearchText(e.target.value)}
-            pattern="[a-zA-Z0-9\s]+"
+            onChange={e => getSearchResult(e.target.value)}
           />
         </div>
       </div>
       <div className="search-books-results">
         <ol className="books-grid">
-          {Array.isArray(searchBooks) &&
-            searchBooks.map((book: BookModel) => (
+          {Array.isArray(books) &&
+            books.map((book: BookModel) => (
               <li key={book.id}>
                 <BookCard key={book.id} book={book} />
               </li>

@@ -33,7 +33,7 @@ const BookCard = ({book}: any) => {
           }}
         ></div>
         <div className="book-shelf-changer">
-          <select defaultValue={book.shelf ? book.shelf : 'none'} onChange={(e) => updateShelf(book, e) }>
+          <select defaultValue={book.shelf || 'none'} onChange={(e) => updateShelf(book, e) }>
             {
               dropdownStatus.map((el, index) => <option key={index} value={el.value} disabled={index === 0}>{el.key}</option>)
             }

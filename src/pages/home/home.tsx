@@ -9,11 +9,15 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { RootState } from "../../store/store";
+import Spinner from "../../components/spinner/spinner";
 
 const Home = () => {
 
   const booksState = useSelector((state: RootState) => state.books);
+  const showSpinner = useSelector((state: RootState) => state.spinner.showSpinner);
 
+  console.log('111111', showSpinner);
+  
   const shelves = booksState.books;
 
   const useAppDispatch: () => AppDispatch = useDispatch;
@@ -65,24 +69,34 @@ const Home = () => {
 
   const mappedData = mapShelfData(readingBooks, wantedBooks, readedBooks);
 
-  return (
-    <div className="list-books">
-      <div className="list-books-title">
-        <h1>MyReads</h1>
-      </div>
-      <div className="list-books-content">
-        <div>
-          {Array.isArray(mappedData) &&
-            mappedData.map((shelf: ShelfModel) => (
-              <Shelf key={shelf.title} shelf={shelf} />
-            ))}
+  if(showSpinner) {
+
+    return (
+      <Spinner />
+    );
+
+  } else {
+    
+    return (
+      <div className="list-books">
+        <div className="list-books-title">
+          <h1>MyReads</h1>
+        </div>
+        <div className="list-books-content">
+          <div>
+            {Array.isArray(mappedData) &&
+              mappedData.map((shelf: ShelfModel) => (
+                <Shelf key={shelf.title} shelf={shelf} />
+              ))}
+          </div>
+        </div>
+        <div className="open-search">
+          <Link to="/search"> Add a book</Link>
         </div>
       </div>
-      <div className="open-search">
-        <Link to="/search"> Add a book</Link>
-      </div>
-    </div>
-  );
-};
+    );
+  };
+
+}
 
 export default Home;
