@@ -1,21 +1,42 @@
 import "./home.css";
 import Shelf from "../../components/shelf/shelf";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BookModel } from "../../models/book";
 import { readingStatus, shelfTitles } from "../../constant/defines";
 import { ShelfModel } from "../../models/shelf";
-import { getAll } from "../../BooksAPI";
+import { getBooks } from "../../BooksAPI";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { RootState } from "../../store/store";
 
 const Home = () => {
-  
-  let mappedData = [];
 
-  const [shelves, setShelves] = useState<any>([]);
+  const booksState = useSelector((state: RootState) => state.books);
+
+  const shelves = booksState.books;
+
+  const useAppDispatch: () => AppDispatch = useDispatch;
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    getAll().then((items) => setShelves(items));
-  }, []);
+
+    dispatch(getBooks());
+
+  }, [dispatch]);
+
+  
+  // filter books based on currentlyReading | wantToRead | read
+  const readingBooks = shelves.filter(
+    el => el.shelf === readingStatus.currentlyReading
+  );
+  const wantedBooks = shelves.filter(
+    el => el.shelf === readingStatus.wantToRead
+  );
+  const readedBooks = shelves.filter(
+    el => el.shelf === readingStatus.read
+  );
 
 
   /**
@@ -42,22 +63,8 @@ const Home = () => {
     ];
   };
 
-  // filter books based on currentlyReading | wantToRead | read
-  if (Array.isArray(shelves)) {
-    const readingBooks = shelves.filter(
-      el => el.shelf === readingStatus.currentlyReading
-    );
-    const wantedBooks = shelves.filter(
-      el => el.shelf === readingStatus.wantToRead
-    );
-    const readedBooks = shelves.filter(
-      el => el.shelf === readingStatus.read
-    );
+  const mappedData = mapShelfData(readingBooks, wantedBooks, readedBooks);
 
-    mappedData = mapShelfData(readingBooks, wantedBooks, readedBooks);
-
-  };
-  
   return (
     <div className="list-books">
       <div className="list-books-title">

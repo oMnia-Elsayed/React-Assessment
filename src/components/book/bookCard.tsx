@@ -1,38 +1,22 @@
 import './bookCard.css';
-import { update, getAll } from '../../BooksAPI';
-import { useState, useEffect } from 'react';
+import {updateBooks } from '../../BooksAPI';
 import { dropdownStatus } from '../../constant/defines';
 import { BookModel } from '../../models/book';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
 
 const BookCard = ({book}: any) => {
 
-  const [books, setBooks] = useState([]);
-  
-  useEffect(() => {
-    getAll().then(res => setBooks(res));
+  const useAppDispatch: () => AppDispatch = useDispatch;
 
-    return(() => setBooks([]));
-  }, []);
+  const dispatch = useAppDispatch();
 
   const updateShelf = (book: BookModel, event: any) => {
 
     const wantedShelf = event.target.value;
+   
+    dispatch(updateBooks(book, wantedShelf));
 
-    const updatedBooks: any = books.map((el: BookModel) => {
-      
-      if (el.id === book.id) {
-
-        book.shelf = wantedShelf;
-
-        return book;
-      };
-
-      return el;
-    });
-
-    setBooks(updatedBooks);
-
-    update(book, wantedShelf).then();
   };
 
   const imgURL = `url(${book.imageLinks.thumbnail})`;
