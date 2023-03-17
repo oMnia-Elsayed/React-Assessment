@@ -1,5 +1,5 @@
 import { BookModel } from "./models/book";
-import { setBooks } from "./store/book-slice";
+import { setBooks, setError } from "./store/book-slice";
 import { setShowSpinner } from "./store/spinner-slice";
 import { AppDispatch } from "./store/store";
 
@@ -55,11 +55,22 @@ export const getBooks = () => {
 
     dispatch(setShowSpinner(true));
 
-    const books: any[] = await getAll().then(items => items);
+    try {
 
-    dispatch(setBooks(books));
-    
-    dispatch(setShowSpinner(false));
+      const books: any[] = await getAll().then(items => items);
+      
+      dispatch(setBooks(books));
+  
+      dispatch(setShowSpinner(false));
+
+    } catch (error) {
+       
+      dispatch(setShowSpinner(false));
+
+      dispatch(setError(true));
+
+      throw new Error('Service Error!');
+    }
 
   };
 };
@@ -71,14 +82,24 @@ export const updateBooks = (book: BookModel, shelf: string) => {
 
     dispatch(setShowSpinner(true));
 
-    await update(book, shelf).then();
+    try {
 
-    const books: any[] = await getAll().then(items => items);
+      await update(book, shelf).then();
 
-    dispatch(setBooks(books));
+      const books: any[] = await getAll().then(items => items);
+  
+      dispatch(setBooks(books));
+  
+      dispatch(setShowSpinner(false));
 
-    dispatch(setShowSpinner(false));
+    } catch (error) {
+        
+      dispatch(setShowSpinner(false));
 
+      dispatch(setError(true));
+      
+      throw new Error('Service Error!');
+    }
   };
 };
 
@@ -91,13 +112,23 @@ export const searchBooks = (searchText: string) => {
 
     // if(!searchText.length) dispatch(setBooks([]));
 
-    const books: any[] | any = await search(searchText).then(res => res);
+    try {
 
-    console.log("boooooks", books);
+      const books: any[] | any = await search(searchText).then(res => res);
 
-    dispatch(setBooks(books));
+      console.log("boooooks", books);
+  
+      dispatch(setBooks(books));
+  
+      dispatch(setShowSpinner(false));
 
-    dispatch(setShowSpinner(false));
+    } catch (error) {
+         
+      dispatch(setShowSpinner(false));
 
+      dispatch(setError(true));
+      
+      throw new Error('Service Error!');
+    }
   };
 };

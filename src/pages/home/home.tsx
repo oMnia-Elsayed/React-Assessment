@@ -10,14 +10,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { RootState } from "../../store/store";
 import Spinner from "../../components/spinner/spinner";
+import ErrorComponent from "../../components/error/error";
 
 const Home = () => {
 
   const booksState = useSelector((state: RootState) => state.books);
   const showSpinner = useSelector((state: RootState) => state.spinner.showSpinner);
+  const error = useSelector((state: RootState) => state.books.hasError);
 
   console.log('111111', showSpinner);
-  
+
   const shelves = booksState.books;
 
   const useAppDispatch: () => AppDispatch = useDispatch;
@@ -30,7 +32,7 @@ const Home = () => {
 
   }, [dispatch]);
 
-  
+
   // filter books based on currentlyReading | wantToRead | read
   const readingBooks = shelves.filter(
     el => el.shelf === readingStatus.currentlyReading
@@ -69,33 +71,28 @@ const Home = () => {
 
   const mappedData = mapShelfData(readingBooks, wantedBooks, readedBooks);
 
-  if(showSpinner) {
+  if (showSpinner) return (<Spinner />);
 
-    return (
-      <Spinner />
-    );
+  if (error) return (<ErrorComponent />);
 
-  } else {
-    
-    return (
-      <div className="list-books">
-        <div className="list-books-title">
-          <h1>MyReads</h1>
-        </div>
-        <div className="list-books-content">
-          <div>
-            {Array.isArray(mappedData) &&
-              mappedData.map((shelf: ShelfModel) => (
-                <Shelf key={shelf.title} shelf={shelf} />
-              ))}
-          </div>
-        </div>
-        <div className="open-search">
-          <Link to="/search"> Add a book</Link>
+  return (
+    <div className="list-books">
+      <div className="list-books-title">
+        <h1>MyReads</h1>
+      </div>
+      <div className="list-books-content">
+        <div>
+          {Array.isArray(mappedData) &&
+            mappedData.map((shelf: ShelfModel) => (
+              <Shelf key={shelf.title} shelf={shelf} />
+            ))}
         </div>
       </div>
-    );
-  };
+      <div className="open-search">
+        <Link to="/search"> Add a book</Link>
+      </div>
+    </div>
+  );
 
 }
 
