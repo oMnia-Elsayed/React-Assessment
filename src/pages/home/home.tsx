@@ -18,8 +18,6 @@ const Home = () => {
   const showSpinner = useSelector((state: RootState) => state.spinner.showSpinner);
   const error = useSelector((state: RootState) => state.books.hasError);
 
-  console.log('111111', showSpinner);
-
   const shelves = booksState.books;
 
   const useAppDispatch: () => AppDispatch = useDispatch;
