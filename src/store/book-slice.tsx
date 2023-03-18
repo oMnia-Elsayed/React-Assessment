@@ -1,10 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { BookModel } from "../models/book";
 
-const initialState: {books: Array<BookModel>, searchText: String, hasError: boolean} = {
+const initialState: {
+    books: Array<BookModel>, 
+    searchText: String, 
+    hasError: boolean, 
+    searchBooks: Array<BookModel>,
+} = {
     books: [],
     searchText: '',
     hasError: false,
+    searchBooks: [],
 };
 
 const bookSlice = createSlice({
@@ -12,10 +18,13 @@ const bookSlice = createSlice({
     initialState,
     reducers: {
         setBooks: (state, action) => {
-            state.books = [...action.payload]
+            state.books = [...action.payload];
+        },
+        setSearchText: (state, action) => {
+            state.searchText = action.payload;
         },
         setSearchBooks: (state, action) => {
-            state.searchText = action.payload;
+            state.searchBooks =  [...action.payload];
         },
         setError: (state, action) => {
             state.hasError = action.payload;
@@ -23,6 +32,6 @@ const bookSlice = createSlice({
     }
 });
 
-export const { setBooks, setSearchBooks, setError } = bookSlice.actions;
+export const { setBooks, setSearchText, setSearchBooks, setError } = bookSlice.actions;
 
 export default bookSlice.reducer;

@@ -1,5 +1,5 @@
 import { BookModel } from "./models/book";
-import { setBooks, setError } from "./store/book-slice";
+import { setBooks, setError, setSearchBooks } from "./store/book-slice";
 import { setShowSpinner } from "./store/spinner-slice";
 import { AppDispatch } from "./store/store";
 
@@ -37,17 +37,17 @@ export const update = (book: any, shelf: any) =>
     body: JSON.stringify({ shelf })
   }).then(res => res.json());
 
-export const search = (query: string, maxResults?: any) =>
-  fetch(`${api}/search`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ query, maxResults })
-  })
-    .then(res => res.json())
-    .then(data => data.books);
+export const search = (query: string, maxResults?: any) => 
+    fetch(`${api}/search`, {
+      method: "POST",
+      headers: {
+        ...headers,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ query, maxResults })
+    })
+      .then(res => res.json())
+      .then(data => data.books);
 
 export const getBooks = () => {
 
@@ -57,10 +57,14 @@ export const getBooks = () => {
 
     try {
 
-      const books: any[] = await getAll().then(items => items);
+      let books: any[] = await getAll().then(items => items);
+
+      if(Array.isArray(books) && books.length) {
+        
+        dispatch(setBooks(books));
+    
+      } else dispatch(setBooks([]));
       
-      dispatch(setBooks(books));
-  
       dispatch(setShowSpinner(false));
 
     } catch (error) {
@@ -88,8 +92,13 @@ export const updateBooks = (book: BookModel, shelf: string) => {
 
       const books: any[] = await getAll().then(items => items);
   
-      dispatch(setBooks(books));
-  
+      if(Array.isArray(books) && books.length) {
+        
+        dispatch(setBooks(books));
+    
+        
+      } else dispatch(setBooks([]));
+      
       dispatch(setShowSpinner(false));
 
     } catch (error) {
@@ -110,16 +119,23 @@ export const searchBooks = (searchText: string) => {
 
     dispatch(setShowSpinner(true));
 
-    // if(!searchText.length) dispatch(setBooks([]));
+    if(!searchText.length) {
+
+      dispatch(setSearchBooks([]));
+      
+      return;
+    }
 
     try {
 
       const books: any[] | any = await search(searchText).then(res => res);
 
-      console.log("boooooks", books);
-  
-      dispatch(setBooks(books));
-  
+      if(Array.isArray(books) && books.length) {
+        
+        dispatch(setSearchBooks(books));
+    
+      } else dispatch(setSearchBooks([]));
+      
       dispatch(setShowSpinner(false));
 
     } catch (error) {
